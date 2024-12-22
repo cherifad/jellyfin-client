@@ -112,7 +112,7 @@ export default function Home() {
 
   return (
     <>
-      <MediaHomeCaroussel medias={movies} />
+      <MediaHomeCaroussel medias={recentItems} />
       {
         // Only show resume items if there are any
         recentItems.length > 0 && (

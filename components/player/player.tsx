@@ -56,7 +56,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     <div>
       <video
         ref={videoRef}
-        className="video-js vjs-default-skin vjs-big-play-centered"
+        className="video-js vjs-default-skin vjs-big-play-centered h-96"
         poster={poster}
       />
     </div>
