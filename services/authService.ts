@@ -1,6 +1,6 @@
 import { Api, Jellyfin } from '@jellyfin/sdk';
-import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models/base-item-dto';
-import { getItemsApi } from '@jellyfin/sdk/lib/utils/api/items-api';
+import { getUserApi } from '@jellyfin/sdk/lib/utils/api/user-api';
+import { UserDto } from '@jellyfin/sdk/lib/generated-client/models';
 
 let jellyfin: Jellyfin | null = null;
 
@@ -87,37 +87,13 @@ export const restoreJellyfinSession = async () => {
     return null; // Return null if no valid session exists
 };
 
-export const fetchMovies = async (api: Api | null, limit: number = 10): Promise<BaseItemDto[]> => {
-    if (!api) return [];
-
+export const getConnectedUser = async (api: Api): Promise<UserDto | null> => {
     try {
-        const itemsApi = getItemsApi(api);
-        const response = await itemsApi.getItems({
-            recursive: true,
-            includeItemTypes: ['Movie'],
-            limit: limit,
-            fields: ['PrimaryImageAspectRatio', 'MediaSourceCount', 'Overview', "Path"],
-        });
-        return response.data.Items || [];
+        const userApi = getUserApi(api);  // Get the User API instance
+        const response = await userApi.getCurrentUser();  // Get current user data
+        return response.data || null;  // Return the user data or null if not found
     } catch (error) {
-        console.error('Failed to fetch movies:', error);
-        return [];
-    }
-};
-
-export const fetchTvShows = async (api: Api | null, limit: number = 10): Promise<BaseItemDto[]> => {
-    if (!api) return [];
-
-    try {
-        const itemsApi = getItemsApi(api);
-        const response = await itemsApi.getItems({
-            recursive: true,
-            includeItemTypes: ['Series'],
-            limit: limit,
-        });
-        return response.data.Items || [];
-    } catch (error) {
-        console.error('Failed to fetch TV shows:', error);
-        return [];
+        console.error('Error fetching the connected user:', error);
+        return null;  // Return null in case of an error
     }
 };

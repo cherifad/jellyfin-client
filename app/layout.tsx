@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import Footer from "@/components/footer/footer";
+import Main from "@/components/main";
+import { Inter, Poppins } from "next/font/google";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -12,6 +17,8 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
+
+const inter = Poppins({ subsets: ["latin"], weight: ["100", "400", "700"] });
 
 export const metadata: Metadata = {
   title: "Jellyfin Next",
@@ -25,11 +32,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      <body className={`${inter.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
         >
-          {children}
-        </body>
+          <SidebarProvider className="flex-col">
+            <Main>{children}</Main>
+            {/* <Footer /> */}
+          </SidebarProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
