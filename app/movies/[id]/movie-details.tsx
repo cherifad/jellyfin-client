@@ -19,7 +19,7 @@ import ExternalLinkList from "./external-link-list";
 import { Button } from "@/components/ui/button";
 import { Clock4, CalendarDays } from "lucide-react";
 import Link from "next/link";
-import { VideoPlayer } from "@/components/player/player";
+import VideoPlayer from "@/components/player/player";
 
 interface MovieDetailsProps {
   movieId: string;
@@ -71,43 +71,52 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
   }
 
   return (
-    <div className="w-1/3">
-      <div className="flex items-center gap-2">
-        <Image
-          src={buildLogoUrl(serverUrl ?? "", movie)}
-          width={200}
-          height={200}
-          alt={movie.Name ? movie.Name + " Logo" : "Movie Logo"}
-        />
-        <Button variant="blurred" className="w-14 h-14">
-          {movie.OfficialRating}
-        </Button>
-      </div>
-      {movie.Taglines && movie.Taglines[0] && (
-        <p className="my-6 text-opacity-65 italic">{movie.Taglines[0]}</p>
-      )}
-      <p className="my-6 text-opacity-65">{movie.Overview}</p>
-      <CastAvatarList cast={movie.People ?? []} />
-      <ExternalLinkList externalLinks={movie.ExternalUrls ?? []} />
-      <div className="flex gap-2">
-        <p>{truncateNumber(movie.CommunityRating ?? 0, 1)}/10</p>
-        <p className="flex gap-2">
-          <CalendarDays size={24} />
-          {movie.ProductionYear}
-        </p>
-        <p className="flex gap-2">
-          <Clock4 size={24} />
-          {ticksToString(movie.RunTimeTicks ?? 0)}
-        </p>
-      </div>
-      <div className="flex gap-2 my-6">
-        {movie.Genres?.map((genre) => (
-          <Button key={genre} variant="border" className="font-normal" asChild>
-            <Link href={`/movies/genre/${genre}`}>{genre}</Link>
+    <div className="flex gap-6">
+      <div className="w-1/3">
+        <div className="flex items-center gap-2">
+          <Image
+            src={buildLogoUrl(serverUrl ?? "", movie)}
+            width={200}
+            height={200}
+            alt={movie.Name ? movie.Name + " Logo" : "Movie Logo"}
+          />
+          <Button variant="blurred" className="w-14 h-14">
+            {movie.OfficialRating}
           </Button>
-        ))}
+        </div>
+        {movie.Taglines && movie.Taglines[0] && (
+          <p className="my-6 text-opacity-65 italic">{movie.Taglines[0]}</p>
+        )}
+        <p className="my-6 text-opacity-65">{movie.Overview}</p>
+        <CastAvatarList cast={movie.People ?? []} />
+        <ExternalLinkList externalLinks={movie.ExternalUrls ?? []} />
+        <div className="flex gap-2">
+          <p>{truncateNumber(movie.CommunityRating ?? 0, 1)}/10</p>
+          <p className="flex gap-2">
+            <CalendarDays size={24} />
+            {movie.ProductionYear}
+          </p>
+          <p className="flex gap-2">
+            <Clock4 size={24} />
+            {ticksToString(movie.RunTimeTicks ?? 0)}
+          </p>
+        </div>
+        <div className="flex gap-2 my-6">
+          {movie.Genres?.map((genre) => (
+            <Button
+              key={genre}
+              variant="border"
+              className="font-normal"
+              asChild
+            >
+              <Link href={`/movies/genre/${genre}`}>{genre}</Link>
+            </Button>
+          ))}
+        </div>
       </div>
-      <VideoPlayer src="/video/300.mkv" type="video/webm" />
+      <div className="flex-1">
+        <VideoPlayer src="/videos/test.mp4" />
+      </div>
     </div>
   );
 }

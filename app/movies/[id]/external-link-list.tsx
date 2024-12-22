@@ -28,8 +28,8 @@ export default function ExternalLinkList({
 }: ExternalLinkListProps) {
   return (
     <div className="flex gap-2 my-6">
-      {externalLinks.map((link) => (
-        <div key={link.Name}>
+      {externalLinks.map((link, index) => (
+        <div key={`external-link-${index}`} className="h-12 w-12">
           <Link
             href={link.Url ?? "#"}
             className="opacity-65 hover:opacity-100 transition-opacity h-full flex items-center "

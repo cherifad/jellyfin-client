@@ -113,23 +113,48 @@ export default function Home() {
   return (
     <>
       <MediaHomeCaroussel medias={movies} />
-      <MediaCaroussel
-        medias={recentItems}
-        title="Recently Added"
-        viewAllTitle="View All"
-      />
-      <MediaCaroussel
-        medias={resumeItems}
-        title="Continue Watching"
-        viewAllTitle="View All"
-        buttonTitle="Resume"
-      />
-      <MediaCaroussel
-        medias={tvShows}
-        title="TV Shows"
-        viewAllTitle="View All"
-      />
-      <MediaCaroussel medias={movies} title="Movies" viewAllTitle="View All" />
+      {
+        // Only show resume items if there are any
+        recentItems.length > 0 && (
+          <MediaCaroussel
+            medias={recentItems}
+            title="Recently Added"
+            viewAllTitle="View All"
+            buttonTitle="Play"
+          />
+        )
+      }
+      {
+        // Only show resume items if there are any
+        resumeItems.length > 0 && (
+          <MediaCaroussel
+            medias={resumeItems}
+            title="Continue Watching"
+            viewAllTitle="View All"
+            buttonTitle="Resume"
+          />
+        )
+      }
+      {
+        // Only show resume items if there are any
+        tvShows.length > 0 && (
+          <MediaCaroussel
+            medias={tvShows}
+            title="TV Shows"
+            viewAllTitle="View All"
+          />
+        )
+      }
+      {
+        // Only show resume items if there are any
+        movies.length > 0 && (
+          <MediaCaroussel
+            medias={movies}
+            title="Movies"
+            viewAllTitle="View All"
+          />
+        )
+      }
       <Button onClick={handleLogout}>Logout</Button>
     </>
   );
