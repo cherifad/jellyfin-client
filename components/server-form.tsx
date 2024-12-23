@@ -12,10 +12,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useJellyfinStore } from "@/store/jellyfinStore";
 import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { isUrl } from "@/lib/utils";
 
 export function ServerForm({
   className,
@@ -30,6 +31,10 @@ export function ServerForm({
 
   const testServer = async (url: string) => {
     try {
+      if (!isUrl(url)) {
+        setError("Invalid URL");
+        return;
+      }
       setError(null);
       setLoading(true);
       await fetch(`${url}/System/Info/Public`, {
