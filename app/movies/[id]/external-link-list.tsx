@@ -9,7 +9,7 @@ interface ExternalLinkListProps {
 const getImgUrl = (name: string) => {
   switch (name) {
     case "IMDb":
-      return "/providers/IMDb.svg";
+      return "/providers/IMDB.svg";
     case "TheMovieDb":
       return "/providers/TMDB.svg";
     case "TVDb":
@@ -31,6 +31,7 @@ export default function ExternalLinkList({
       {externalLinks.map((link) => (
         <div key={link.Name}>
           <Link
+            target="_blank"
             href={link.Url ?? "#"}
             className="opacity-65 hover:opacity-100 transition-opacity h-full flex items-center "
           >

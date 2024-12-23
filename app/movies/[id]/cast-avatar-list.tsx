@@ -15,7 +15,7 @@ export default function CastAvatarList({ cast }: CastAvatarListProps) {
   const { serverUrl } = useJellyfinStore();
 
   return (
-    <ul className="flex">
+    <ul className="flex ml-4">
       {cast.slice(0, 5).map((person) => (
         <li
           key={person.Id}

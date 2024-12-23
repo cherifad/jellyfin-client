@@ -73,12 +73,18 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
   return (
     <div className="w-1/3">
       <div className="flex items-center gap-2">
-        <Image
-          src={buildLogoUrl(serverUrl ?? "", movie)}
-          width={200}
-          height={200}
-          alt={movie.Name ? movie.Name + " Logo" : "Movie Logo"}
-        />
+        {movie.ImageTags?.Logo ? (
+          <Image
+            src={buildLogoUrl(serverUrl ?? "", movie)}
+            width={200}
+            height={200}
+            alt={movie.Name ? movie.Name + " Logo" : "Movie Logo"}
+          />
+        ) : (
+          <h1 className="text-4xl font-bold">
+            {movie.Name}
+          </h1>
+        )}
         <Button variant="blurred" className="w-14 h-14">
           {movie.OfficialRating}
         </Button>
