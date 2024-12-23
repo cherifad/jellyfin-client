@@ -66,7 +66,7 @@ export const MediaCaroussel = ({
               <div className="group relative flex-1 h-full flex flex-col justify-between fading-border p-1">
                 <div></div>
                 <Image
-                  src={`${serverUrl}/Items/${media.Id}/Images/Primary?Height=300&tag=${media.ImageTags?.Primary}`}
+                  src={`${serverUrl ?? ""}/Items/${media.Id}/Images/Primary?Height=300&tag=${media.ImageTags?.Primary}`}
                   alt={media.Name || "Media Poster"}
                   height={300}
                   width={200}

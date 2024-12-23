@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useJellyfinStore } from "@/store/jellyfinStore";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
 import {
   BaseItemDto,
   UserDto,
@@ -15,22 +14,12 @@ import {
   fetchResumeItems,
 } from "@/services/itemService";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { getConnectedUser } from "@/services/authService";
-import MediaCard from "@/components/library/media-card";
 import { MediaHomeCaroussel } from "@/components/library/media-home-caroussel";
 import { MediaCaroussel } from "@/components/library/media-caroussel";
 
 export default function Home() {
-  const { restoreSession, logout, serverUrl } = useJellyfinStore();
-  const { api, loading } = useAuth();
+  const { restoreSession, logout, serverUrl, api } = useJellyfinStore();
   const [localLoading, setLoading] = useState(true);
   const [movies, setMovies] = useState<BaseItemDto[]>([]);
   const [tvShows, setTvShows] = useState<BaseItemDto[]>([]);
@@ -95,15 +84,7 @@ export default function Home() {
     getConnectedUser(api).then((user) => {
       setConnectedUser(user);
     });
-  }, [api, loading]);
-
-  if (loading) {
-    return <p style={{ padding: "2rem" }}>Loading...</p>;
-  }
-
-  if (!api) {
-    return null; // Redirecting to login
-  }
+  }, []);
 
   const handleLogout = () => {
     logout();
