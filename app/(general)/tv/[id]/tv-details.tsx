@@ -19,14 +19,17 @@ import ExternalLinkList from "./external-link-list";
 import { Button } from "@/components/ui/button";
 import { Clock4, CalendarDays } from "lucide-react";
 import Link from "next/link";
-import VideoPlayer from "@/components/player/player";
+import { VideoPlayer } from "@/components/player/player";
+import { getSeasons } from "@/services/tvService";
+import { MediaCaroussel } from "@/components/library/media-caroussel";
 
-interface MovieDetailsProps {
-  movieId: string;
+interface TvDetailsProps {
+  tvId: string;
 }
 
-export default function MovieDetails({ movieId }: MovieDetailsProps) {
-  const [movie, setMovie] = useState<BaseItemDto | null>(null);
+export default function TvDetails({ tvId }: TvDetailsProps) {
+  const [tv, setTv] = useState<BaseItemDto | null>(null);
+  const [seasons, setSeasons] = useState<BaseItemDto[] | null>(null);
   const [video, setVideo] = useState<File | null>(null);
   const { user, serverUrl } = useJellyfinStore();
   const { api, loading } = useAuth();
@@ -37,14 +40,15 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
       return;
     }
 
-    console.log("Fetching movie details for:", movieId);
+    console.log("Fetching tv details for:", tvId);
 
-    getDetails(api, movieId, user.Id!)
+    getDetails(api, tvId, user.Id!)
       .then((result) => {
         if (result.success) {
-          setMovie(result.data);
+          console.log("Fetched tv details:", result.data);
+          setTv(result.data);
           setBgImageUrl(
-            result.data.Name || "Movie Poster",
+            result.data.Name || "tv Poster",
             buildBackdropUrl(serverUrl ?? "", result.data)
           );
           //   getVideoStream(api, result.data.MediaSources![0].Id ?? "").then(
@@ -58,15 +62,25 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
           //     }
           //   );
         } else {
-          console.error("Failed to fetch movie details:", result.error);
+          console.error("Failed to fetch tv details:", result.error);
         }
       })
+      .then(() => {
+        getSeasons(api, tvId, user.Id!).then((result) => {
+          if (result.success) {
+            console.log("Fetched seasons:", result.data);
+            setSeasons(result.data);
+          } else {
+            console.error("Failed to fetch seasons:", result.error);
+          }
+        });
+      })
       .catch((error) => {
-        console.error("Failed to fetch movie details:", error);
+        console.error("Failed to fetch tv details:", error);
       });
   }, [user, api, loading]);
 
-  if (loading || !movie) {
+  if (loading || !tv) {
     return <div>Loading...</div>;
   }
 
@@ -74,49 +88,56 @@ export default function MovieDetails({ movieId }: MovieDetailsProps) {
     <div className="flex gap-6">
       <div className="w-1/3">
         <div className="flex items-center gap-2">
-          <Image
-            src={buildLogoUrl(serverUrl ?? "", movie)}
-            width={200}
-            height={200}
-            alt={movie.Name ? movie.Name + " Logo" : "Movie Logo"}
-          />
+          {tv.ImageTags?.Logo ? (
+            <Image
+              src={buildLogoUrl(serverUrl ?? "", tv)}
+              width={200}
+              height={200}
+              alt={tv.Name ? tv.Name + " Logo" : "tv Logo"}
+            />
+          ) : (
+            <h1 className="text-4xl font-bold">{tv.Name}</h1>
+          )}
           <Button variant="blurred" className="w-14 h-14">
-            {movie.OfficialRating}
+            {tv.OfficialRating}
           </Button>
         </div>
-        {movie.Taglines && movie.Taglines[0] && (
-          <p className="my-6 text-opacity-65 italic">{movie.Taglines[0]}</p>
+        {tv.Taglines && tv.Taglines[0] && (
+          <p className="my-6 text-opacity-65 italic">{tv.Taglines[0]}</p>
         )}
-        <p className="my-6 text-opacity-65">{movie.Overview}</p>
-        <CastAvatarList cast={movie.People ?? []} />
-        <ExternalLinkList externalLinks={movie.ExternalUrls ?? []} />
+        <p className="my-6 text-opacity-65">{tv.Overview}</p>
+        <CastAvatarList cast={tv.People ?? []} />
+        <ExternalLinkList externalLinks={tv.ExternalUrls ?? []} />
         <div className="flex gap-2">
-          <p>{truncateNumber(movie.CommunityRating ?? 0, 1)}/10</p>
+          <p>{truncateNumber(tv.CommunityRating ?? 0, 1)}/10</p>
           <p className="flex gap-2">
             <CalendarDays size={24} />
-            {movie.ProductionYear}
+            {tv.ProductionYear}
           </p>
           <p className="flex gap-2">
             <Clock4 size={24} />
-            {ticksToString(movie.RunTimeTicks ?? 0)}
+            {ticksToString(tv.RunTimeTicks ?? 0)}
           </p>
         </div>
         <div className="flex gap-2 my-6">
-          {movie.Genres?.map((genre) => (
+          {tv.GenreItems?.map((genre) => (
             <Button
-              key={genre}
+              key={genre.Id}
               variant="border"
               className="font-normal"
               asChild
             >
-              <Link href={`/movies/genre/${genre}`}>{genre}</Link>
+              <Link href={`/genre/${genre.Id}`}>{genre.Name}</Link>
             </Button>
           ))}
         </div>
+        <VideoPlayer src="/video/300.mkv" type="video/webm" />
       </div>
-      <div className="flex-1">
-        <VideoPlayer src="/videos/test.mp4" />
-      </div>
+      <MediaCaroussel
+        medias={seasons ?? []}
+        title="Seasons"
+        buttonTitle="View"
+      />
     </div>
   );
 }

@@ -42,7 +42,6 @@ export const MediaHomeCaroussel = ({ medias }: MediaHomeCarousselProps) => {
 
     api.on("select", () => {
       const media = medias[api.selectedScrollSnap()];
-      console.log(api.selectedScrollSnap(), media);
       if (!media) {
         return;
       }

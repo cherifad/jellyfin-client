@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { Jellyfin } from "@jellyfin/sdk";
 import { Api } from "@jellyfin/sdk";
 import { UserDto } from "@jellyfin/sdk/lib/generated-client/models";
+import { getUserApi } from "@jellyfin/sdk/lib/utils/api/user-api";
 
 interface JellyfinState {
   api: Api | null;
@@ -16,6 +17,7 @@ interface JellyfinState {
   ) => Promise<void>;
   restoreSession: () => Promise<void>;
   logout: () => void;
+  setServerUrl: (serverUrl: string) => void;
 }
 
 export const useJellyfinStore = create<JellyfinState>()(
@@ -26,6 +28,9 @@ export const useJellyfinStore = create<JellyfinState>()(
       authToken: null,
       user: null,
 
+      setServerUrl: (serverUrl: string) => {
+        set({ serverUrl });
+      },
       // Function to connect to Jellyfin
       connect: async (
         serverUrl: string,
@@ -52,7 +57,7 @@ export const useJellyfinStore = create<JellyfinState>()(
 
           console.log("Auth response:", authResponse);
           const authToken = authResponse.data.AccessToken;
-          
+
           set({ api, serverUrl, authToken, user: authResponse.data.User });
         } catch (error) {
           console.error("Failed to connect to Jellyfin:", error);
@@ -81,8 +86,15 @@ export const useJellyfinStore = create<JellyfinState>()(
 
             const api = jellyfin.createApi(serverUrl);
             api.accessToken = authToken;
+            console.log(JSON.stringify(api.authorizationHeader));
 
             // Example: Verify token by making a test request
+            const userApi = getUserApi(api);
+            const user = await userApi.getCurrentUser();
+
+            if (user.status !== 200) {
+              throw new Error("Invalid token");
+            }
 
             set({ api });
           } catch (error) {

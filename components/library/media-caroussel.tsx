@@ -39,7 +39,7 @@ export const MediaCaroussel = ({
   const [api, setApi] = useState<CarouselApi>();
 
   return (
-    <>
+    <div className="flex-1">
       <div className="flex justify-between items-center mt-6 mb-3">
         <h1 className="text-3xl font-bold">{title}</h1>
         <div className="flex items-center gap-2">
@@ -66,7 +66,7 @@ export const MediaCaroussel = ({
               <div className="group relative flex-1 h-full flex flex-col justify-between fading-border p-1">
                 <div></div>
                 <Image
-                  src={`${serverUrl}/Items/${media.Id}/Images/Primary?Height=300&tag=${media.ImageTags?.Primary}`}
+                  src={`${serverUrl ?? ""}/Items/${media.Id}/Images/Primary?Height=300&tag=${media.ImageTags?.Primary}`}
                   alt={media.Name || "Media Poster"}
                   height={300}
                   width={200}
@@ -95,6 +95,6 @@ export const MediaCaroussel = ({
           ))}
         </CarouselContent>
       </Carousel>
-    </>
+    </div>
   );
 };

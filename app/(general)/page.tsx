@@ -3,34 +3,20 @@
 import { useEffect, useState } from "react";
 import { useJellyfinStore } from "@/store/jellyfinStore";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
 import {
   BaseItemDto,
   UserDto,
 } from "@jellyfin/sdk/lib/generated-client/models";
-import {
-  fetchMovies,
-  fetchTvShows,
-  fetchRecentItems,
-  fetchResumeItems,
-} from "@/services/itemService";
+import { fetchRecentItems, fetchResumeItems } from "@/services/itemService";
+import { fetchMovies } from "@/services/movieService";
+import { fetchTvShows } from "@/services/tvService";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { getConnectedUser } from "@/services/authService";
-import MediaCard from "@/components/library/media-card";
 import { MediaHomeCaroussel } from "@/components/library/media-home-caroussel";
 import { MediaCaroussel } from "@/components/library/media-caroussel";
 
 export default function Home() {
-  const { restoreSession, logout, serverUrl } = useJellyfinStore();
-  const { api, loading } = useAuth();
+  const { restoreSession, logout, serverUrl, api } = useJellyfinStore();
   const [localLoading, setLoading] = useState(true);
   const [movies, setMovies] = useState<BaseItemDto[]>([]);
   const [tvShows, setTvShows] = useState<BaseItemDto[]>([]);
@@ -95,15 +81,7 @@ export default function Home() {
     getConnectedUser(api).then((user) => {
       setConnectedUser(user);
     });
-  }, [api, loading]);
-
-  if (loading) {
-    return <p style={{ padding: "2rem" }}>Loading...</p>;
-  }
-
-  if (!api) {
-    return null; // Redirecting to login
-  }
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -113,48 +91,23 @@ export default function Home() {
   return (
     <>
       <MediaHomeCaroussel medias={recentItems} />
-      {
-        // Only show resume items if there are any
-        recentItems.length > 0 && (
-          <MediaCaroussel
-            medias={recentItems}
-            title="Recently Added"
-            viewAllTitle="View All"
-            buttonTitle="Play"
-          />
-        )
-      }
-      {
-        // Only show resume items if there are any
-        resumeItems.length > 0 && (
-          <MediaCaroussel
-            medias={resumeItems}
-            title="Continue Watching"
-            viewAllTitle="View All"
-            buttonTitle="Resume"
-          />
-        )
-      }
-      {
-        // Only show resume items if there are any
-        tvShows.length > 0 && (
-          <MediaCaroussel
-            medias={tvShows}
-            title="TV Shows"
-            viewAllTitle="View All"
-          />
-        )
-      }
-      {
-        // Only show resume items if there are any
-        movies.length > 0 && (
-          <MediaCaroussel
-            medias={movies}
-            title="Movies"
-            viewAllTitle="View All"
-          />
-        )
-      }
+      <MediaCaroussel
+        medias={resumeItems}
+        title="Continue Watching"
+        viewAllTitle="View All"
+        buttonTitle="Resume"
+      />
+      <MediaCaroussel
+        medias={tvShows}
+        title="TV Shows"
+        viewAllTitle="View All"
+      />
+      <MediaCaroussel medias={movies} title="Movies" viewAllTitle="View All" />
+      <MediaCaroussel
+        medias={recentItems}
+        title="Recently Added"
+        viewAllTitle="View All"
+      />
       <Button onClick={handleLogout}>Logout</Button>
     </>
   );

@@ -2,6 +2,10 @@ import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+const urlRegex = new RegExp(
+  "https?://(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_+.~#?&//=]*)"
+);
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -38,4 +42,16 @@ export const ticksToString = (ticks: number) => {
 
 export const truncateNumber = (num: number, digits: number = 2) => {
   return num.toFixed(digits);
+};
+
+export const isUrl = (string: string) => {
+  let url;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
 };
