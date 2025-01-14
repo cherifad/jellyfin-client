@@ -39,7 +39,7 @@ export const MediaCaroussel = ({
   const [api, setApi] = useState<CarouselApi>();
 
   return (
-    <>
+    <div className="flex-1">
       <div className="flex justify-between items-center mt-6 mb-3">
         <h1 className="text-3xl font-bold">{title}</h1>
         <div className="flex items-center gap-2">
@@ -95,6 +95,6 @@ export const MediaCaroussel = ({
           ))}
         </CarouselContent>
       </Carousel>
-    </>
+    </div>
   );
 };

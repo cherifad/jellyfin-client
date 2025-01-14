@@ -12,59 +12,6 @@ import { ApiResult } from "./types";
 import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api/user-library-api";
 import { getVideosApi } from "@jellyfin/sdk/lib/utils/api/videos-api";
 
-export const fetchMovies = async (
-  api: Api,
-  limit: number = 10
-): Promise<ApiResult<BaseItemDto[]>> => {
-  try {
-    const itemsApi = getItemsApi(api);
-    const response = await itemsApi.getItems({
-      recursive: true,
-      includeItemTypes: ["Movie"],
-      limit: limit,
-    });
-    if (response.data.Items) {
-      return { success: true, data: response.data.Items };
-    } else {
-      return {
-        success: false,
-        error: "No items found",
-        status: response.status,
-      };
-    }
-  } catch (error) {
-    console.error("Error fetching movies:", error);
-    return { success: false, error: "Error fetching movies", status: 500 };
-  }
-};
-
-export const fetchTvShows = async (
-  api: Api,
-  limit: number = 10
-): Promise<ApiResult<BaseItemDto[]>> => {
-  try {
-    const itemsApi = getItemsApi(api);
-    const response = await itemsApi.getItems({
-      recursive: true,
-      includeItemTypes: ["Series"],
-      limit: limit,
-      fields: ["PrimaryImageAspectRatio", "Genres", "SeasonUserData"],
-    });
-    if (response.data.Items) {
-      return { success: true, data: response.data.Items };
-    } else {
-      return {
-        success: false,
-        error: "No items found",
-        status: response.status,
-      };
-    }
-  } catch (error) {
-    console.error("Error fetching TV shows:", error);
-    return { success: false, error: "Error fetching TV shows", status: 500 };
-  }
-};
-
 export const fetchRecentItems = async (
   api: Api,
   limit: number = 10

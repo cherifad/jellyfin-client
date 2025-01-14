@@ -48,3 +48,6 @@ videos/*
 !videos/*.js
 !videos/*.ts
 public/_next-video
+movie.json
+tv.json
+public/videos/test.mp4

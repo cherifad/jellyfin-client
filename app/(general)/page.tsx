@@ -7,12 +7,9 @@ import {
   BaseItemDto,
   UserDto,
 } from "@jellyfin/sdk/lib/generated-client/models";
-import {
-  fetchMovies,
-  fetchTvShows,
-  fetchRecentItems,
-  fetchResumeItems,
-} from "@/services/itemService";
+import { fetchRecentItems, fetchResumeItems } from "@/services/itemService";
+import { fetchMovies } from "@/services/movieService";
+import { fetchTvShows } from "@/services/tvService";
 import { Button } from "@/components/ui/button";
 import { getConnectedUser } from "@/services/authService";
 import { MediaHomeCaroussel } from "@/components/library/media-home-caroussel";
@@ -93,12 +90,7 @@ export default function Home() {
 
   return (
     <>
-      <MediaHomeCaroussel medias={movies} />
-      <MediaCaroussel
-        medias={recentItems}
-        title="Recently Added"
-        viewAllTitle="View All"
-      />
+      <MediaHomeCaroussel medias={recentItems} />
       <MediaCaroussel
         medias={resumeItems}
         title="Continue Watching"
@@ -111,6 +103,11 @@ export default function Home() {
         viewAllTitle="View All"
       />
       <MediaCaroussel medias={movies} title="Movies" viewAllTitle="View All" />
+      <MediaCaroussel
+        medias={recentItems}
+        title="Recently Added"
+        viewAllTitle="View All"
+      />
       <Button onClick={handleLogout}>Logout</Button>
     </>
   );
