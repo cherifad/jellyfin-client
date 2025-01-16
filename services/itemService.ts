@@ -11,6 +11,7 @@ import {
 import { ApiResult } from "./types";
 import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api/user-library-api";
 import { getVideosApi } from "@jellyfin/sdk/lib/utils/api/videos-api";
+import { getLibraryApi } from "@jellyfin/sdk/lib/utils/api/library-api";
 
 export const fetchRecentItems = async (
   api: Api,
@@ -107,7 +108,7 @@ export const getDetails = async (
 
 export const getVideoStream = async (
   api: Api,
-  itemId: string,
+  itemId: string
 ): Promise<ApiResult<File>> => {
   try {
     const videosApi = getVideosApi(api);
@@ -128,6 +129,36 @@ export const getVideoStream = async (
     return {
       success: false,
       error: "Error fetching video stream",
+      status: 500,
+    };
+  }
+};
+
+export const getSimilars = async (
+  api: Api,
+  itemId: string,
+  userId: string
+): Promise<ApiResult<BaseItemDto[]>> => {
+  try {
+    const userLibraryApi = getLibraryApi(api);
+    const response = await userLibraryApi.getSimilarItems({
+      itemId: itemId,
+      userId: userId,
+    });
+    if (response.data.Items) {
+      return { success: true, data: response.data.Items };
+    } else {
+      return {
+        success: false,
+        error: "No similar items found",
+        status: response.status,
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching similar items:", error);
+    return {
+      success: false,
+      error: "Error fetching similar items",
       status: 500,
     };
   }

@@ -63,19 +63,28 @@ export const MediaCaroussel = ({
         <CarouselContent className="border-black">
           {medias.map((media, index) => (
             <CarouselItem key={index} className="basis-1/6">
-              <div className="group relative flex-1 h-full flex flex-col justify-between fading-border p-1">
+              <Link
+                className="group relative flex-1 h-full flex flex-col justify-between fading-border p-1"
+                href={`/medias/${media.Type === "Movie" ? "movies" : "tv"}/${
+                  media.Id
+                }`}
+              >
                 <div></div>
                 <Image
-                  src={`${serverUrl ?? ""}/Items/${media.Id}/Images/Primary?Height=300&tag=${media.ImageTags?.Primary}`}
+                  src={`${serverUrl ?? ""}/Items/${
+                    media.Id
+                  }/Images/Primary?Height=300&tag=${media.ImageTags?.Primary}`}
                   alt={media.Name || "Media Poster"}
                   height={300}
                   width={200}
                   className="rounded-lg w-full"
                 />
-                <Badge className="absolute top-3 right-3 bg-opacity-50 rounded-full flex items-center">
-                  <span className="text-lg">{media.CommunityRating}</span>
-                  /10
-                </Badge>
+                {media.CommunityRating && (
+                  <Badge className="absolute top-3 right-3 bg-opacity-50 rounded-full flex items-center">
+                    <span className="text-lg">{media.CommunityRating}</span>
+                    /10
+                  </Badge>
+                )}
                 <div className="flex justify-center">
                   <Button
                     className="-mt-5 w-fit flex items-center gap-2"
@@ -90,7 +99,7 @@ export const MediaCaroussel = ({
                   <p>{media.ProductionYear}</p>
                   <Badge className="rounded-full">{media.Type}</Badge>
                 </div>
-              </div>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

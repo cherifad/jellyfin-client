@@ -85,9 +85,9 @@ export const MediaHomeCaroussel = ({ medias }: MediaHomeCarousselProps) => {
                     </Button>
                     <Button size="lg" variant="border" asChild>
                       <Link
-                        href={`${media.Type === "Movie" ? "/movies" : "/tv"}/${
-                          media.Id
-                        }`}
+                        href={`/medias/${
+                          media.Type === "Movie" ? "movies" : "tv"
+                        }/${media.Id}`}
                       >
                         MORE INFO
                         <ChevronRight className="h-6 w-6" />
