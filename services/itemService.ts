@@ -1,6 +1,7 @@
 import { Api } from "@jellyfin/sdk";
 import {
   BaseItemDto,
+  BaseItemDtoQueryResult,
   UserItemDataDto,
 } from "@jellyfin/sdk/lib/generated-client/models";
 import { getItemsApi } from "@jellyfin/sdk/lib/utils/api/items-api";
@@ -12,6 +13,7 @@ import { ApiResult } from "./types";
 import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api/user-library-api";
 import { getVideosApi } from "@jellyfin/sdk/lib/utils/api/videos-api";
 import { getLibraryApi } from "@jellyfin/sdk/lib/utils/api/library-api";
+import { getArtistsApi } from "@jellyfin/sdk/lib/utils/api/artists-api";
 
 export const fetchRecentItems = async (
   api: Api,
@@ -159,6 +161,36 @@ export const getSimilars = async (
     return {
       success: false,
       error: "Error fetching similar items",
+      status: 500,
+    };
+  }
+};
+
+export const getArtist = async (
+  api: Api,
+  artistId: string,
+  userId: string
+): Promise<ApiResult<BaseItemDtoQueryResult>> => {
+  try {
+    const artistsApi = getArtistsApi(api);
+    const response = await artistsApi.getArtists({
+      userId: userId,
+      person: artistId,
+    });
+    if (response.data) {
+      return { success: true, data: response.data };
+    } else {
+      return {
+        success: false,
+        error: "No artist found",
+        status: response.status,
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching artist:", error);
+    return {
+      success: false,
+      error: "Error fetching artist",
       status: 500,
     };
   }

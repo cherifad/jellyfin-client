@@ -6,6 +6,7 @@ import { buildPosterUrl, getInitals } from "@/lib/utils";
 import { useJellyfinStore } from "@/store/jellyfinStore";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 
 interface CastAvatarListProps {
   cast: BaseItemPerson[];
@@ -21,15 +22,19 @@ export default function CastAvatarList({ cast }: CastAvatarListProps) {
           key={person.Id}
           className="-ml-4 hover:z-10 hover:scale-125 transition-transform duration-300 select-none cursor-pointer truncate flex flex-col items-center"
         >
-          <Avatar className="w-20 h-20 border-2 border-white">
-            <AvatarImage
-              src={buildPosterUrl(serverUrl ?? "", person.Id ?? "")}
-              alt={person.Name ?? ""}
-              className="object-cover"
-            />
-            <AvatarFallback>{getInitals(person.Name ?? "")}</AvatarFallback>
-          </Avatar>
-          <p className="text-center text-xs mt-2 truncate text-wrap w-16">{person.Name}</p>
+          <Link href={`/medias/actor/${person.Id}`}>
+            <Avatar className="w-20 h-20 border-2 border-white">
+              <AvatarImage
+                src={buildPosterUrl(serverUrl ?? "", person.Id ?? "")}
+                alt={person.Name ?? ""}
+                className="object-cover"
+              />
+              <AvatarFallback>{getInitals(person.Name ?? "")}</AvatarFallback>
+            </Avatar>
+            <p className="text-center text-xs mt-2 truncate text-wrap w-16">
+              {person.Name}
+            </p>
+          </Link>
         </li>
       ))}
       {cast.length > 5 && (

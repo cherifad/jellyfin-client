@@ -7,13 +7,15 @@ interface ExternalLinkListProps {
 }
 
 const getImgUrl = (name: string) => {
-  switch (name) {
-    case "IMDb":
+  switch (name.toUpperCase()) {
+    case "IMDB":
       return "/providers/IMDB.svg";
-    case "TheMovieDb":
+    case "THEMOVIEDB":
       return "/providers/TMDB.svg";
-    case "TVDb":
-      return "/providers/tvdb.png";
+    case "TVDB":
+      return "/providers/TheTvDb.png";
+    case "THETVDB":
+      return "/providers/TheTvDb.png";
     case "Wikipedia":
       return "/providers/wikipedia.png";
     case "Trakt":

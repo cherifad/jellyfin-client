@@ -102,6 +102,7 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
 
   return (
     <div className="flex gap-6 flex-col">
+      {/* {JSON.stringify(item)} */}
       <div className="w-1/3">
         <div className="flex items-center gap-2">
           {item.ImageTags?.Logo ? (
@@ -114,9 +115,11 @@ export default function ItemDetails({ itemId }: ItemDetailsProps) {
           ) : (
             <h1 className="text-4xl font-bold">{item.Name}</h1>
           )}
-          <Button variant="blurred" className="w-14 h-14">
-            {item.OfficialRating}
-          </Button>
+          <span>
+            <span className="rounded-md border p-0.5 py-0 opacity-75 border-primary">
+              {item.OfficialRating}
+            </span>
+          </span>
         </div>
         {item.Taglines && item.Taglines[0] && (
           <p className="my-6 text-opacity-65 italic">{item.Taglines[0]}</p>
