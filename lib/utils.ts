@@ -2,10 +2,6 @@ import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-const urlRegex = new RegExp(
-  "https?://(www.)?[-a-zA-Z0-9@:%._+~#=]{1,256}.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_+.~#?&//=]*)"
-);
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
